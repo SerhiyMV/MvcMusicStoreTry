@@ -10,125 +10,107 @@ using MvcMusicStore.Models;
 
 namespace MvcMusicStore.Controllers
 {
-    public class StoreManagerController : Controller
+    public class OrderController : Controller
     {
         private MusicStoreDB db = new MusicStoreDB();
 
-        // GET: StoreManager
+        // GET: Order
         public ActionResult Index()
         {
-            var albums = db.Albums.ToList();
-            return View(albums);
+            return View(db.Orders.ToList());
         }
 
-        // GET: StoreManager/Details/5
+        // GET: Order/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Album album = db.Albums.Find(id);
-            if (album == null)
+            Order order = db.Orders.Find(id);
+            if (order == null)
             {
                 return HttpNotFound();
             }
-            return View(album);
+            return View(order);
         }
 
-        // GET: StoreManager/Create
+        // GET: Order/Create
         public ActionResult Create()
         {
-            ViewBag.ArtistID = new SelectList(db.Artists, "ArtistID", "Name");
             return View();
         }
 
-        // POST: StoreManager/Create
+        // POST: Order/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "AlbumID,GenredID,ArtistID,Title,Price,AlbumArtUrl")] Album album)
+        public ActionResult Create([Bind(Include = "OrderID,OrderDate,UserName,FirstNmae,LastName,Address,City,State,PostalCode,Phone,Email,Total")] Order order)
         {
             if (ModelState.IsValid)
             {
-                db.Albums.Add(album);
+                db.Orders.Add(order);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.ArtistID = new SelectList(db.Artists, "ArtistID", "Name", album.ArtistID);
-            return View(album);
+            return View(order);
         }
 
-        // GET: StoreManager/Edit/5
+        // GET: Order/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Album album = db.Albums.Find(id);
-            if (album == null)
+            Order order = db.Orders.Find(id);
+            if (order == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.ArtistID = new SelectList(db.Artists, "ArtistID", "Name", album.ArtistID);
-            return View(album);
+            return View(order);
         }
 
-        // POST: StoreManager/Edit/5
+        // POST: Order/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //модель шукає тільки такі поля AlbumArtUrl
-        public ActionResult Edit([Bind(Include = "AlbumID,GenredID,ArtistID,Title,Pricel,AlbumArtUrl")] Album album)
+        public ActionResult Edit([Bind(Include = "OrderID,OrderDate,UserName,FirstNmae,LastName,Address,City,State,PostalCode,Phone,Email,Total")] Order order)
         {
-            var _album = album;
-            var cool = album.AlbumArtUrl;
-
-            //заносить в базу тільки наступні поля:
-            TryUpdateModel(_album, new[] { "AlbumID", "GenredID", "ArtistID", "Title", "Price", "AlbumArtUrl" });
-
-            
-
             if (ModelState.IsValid)
             {
-                db.Entry(_album).State = EntityState.Modified;
+                db.Entry(order).State = EntityState.Modified;
                 db.SaveChanges();
-
                 return RedirectToAction("Index");
             }
-            else
-            {
-                return View(album);
-            }
-
+            return View(order);
         }
 
-        // GET: StoreManager/Delete/5
+        // GET: Order/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Album album = db.Albums.Find(id);
-            if (album == null)
+            Order order = db.Orders.Find(id);
+            if (order == null)
             {
                 return HttpNotFound();
             }
-            return View(album);
+            return View(order);
         }
 
-        // POST: StoreManager/Delete/5
+        // POST: Order/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Album album = db.Albums.Find(id);
-            db.Albums.Remove(album);
+            Order order = db.Orders.Find(id);
+            db.Orders.Remove(order);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

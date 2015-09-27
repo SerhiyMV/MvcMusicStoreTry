@@ -21,7 +21,7 @@ namespace MvcMusicStore.Controllers
         public AccountController()
         {
         }
-Albums
+
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
         {
             UserManager = userManager;
